@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  distance_calculator:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: adev runserver -p 8002
+    ports:
+      - "8002:8002"
+    environment:
+      # Logging
+      - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=INFO
+      - CUSTOM_LOGGING

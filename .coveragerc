@@ -1,0 +1,15 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+omit =
+    # omit individual files
+    server.py
+    app/conftest.py
+    # omit test folders
+    */tests/*
+
+[report]
+fail_under = 90.0
+
+[XML]
+output = codecov-output/coverage.xml

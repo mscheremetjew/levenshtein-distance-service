@@ -1,0 +1,112 @@
+# Backup files
+*.bak
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Mac spcific system files
+.DS_Store
+.DS_Store?
+.directory
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Log files:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Pycharm
+.idea/
+
+# VS Code
+.vscode
+
+# dotenv
+.env
+.out
+
+# virtualenv
+venv/
+ENV/
+
+# Static files
+static/
+
+# Media files
+media/
+
+#Docker-compose
+docker-compose-local.yml
+docker-compose.override.yml
+
+# Database backups
+.backups/
+
+# Vim (copied https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
+.sw[a-z]
+Session.vim
+.netrwhist
+*~
+tags
+
+# Database dumps
+*.dump
+
+# Atom
+.tags
+
+output/
