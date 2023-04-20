@@ -1,6 +1,7 @@
 # General packages
 environs~=4.1.0
 retry-decorator==1.1.1
+Levenshtein~=0.21.0
 
 # QA
 flake8==4.0.1

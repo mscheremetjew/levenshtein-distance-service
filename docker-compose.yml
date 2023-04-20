@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     command: adev runserver -p 8002
     ports:
-      - "8002:8002"
+      - "8001:8001"
     environment:
       # Logging
       - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=INFO
