@@ -8,7 +8,32 @@ services:
     command: adev runserver -p 8002
     ports:
       - "8001:8001"
+    networks:
+      - microservices
     environment:
       # Logging
       - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=INFO
       - CUSTOM_LOGGING
+  postgres:
+    image: postgres:13.4
+    ports:
+      - "15432:5432"
+    networks:
+      - microservices
+    environment:
+      - POSTGRES_DB=distance_service
+      - POSTGRES_USER=maxim
+      - POSTGRES_PASSWORD=maxim
+  redis:
+    # For dev purposes only
+    image: "redis:6.2.12-alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./config/redis/redis.conf:/redis.conf
+    command: [ "redis-server", "/redis.conf" ]
+    networks:
+      - microservices
+
+networks:
+    microservices:

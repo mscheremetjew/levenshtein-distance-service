@@ -60,7 +60,17 @@ Here is a graphical overview about the signup, login, job submission, job status
 
 ### Getting started
 
-...
+Before you start make sure you have your private SSH Key added, which gives you access to certain GitHub organisation or private repos. You only have to do this once!
+
+```shell
+ssh-add /your/ssh/key/file/for/github
+```
+
+Every time you open a new console/terminal make sure your ssh-agent is running and all SSH keys are added.
+
+```shell
+eval `ssh-agent -s` && ssh-add
+```
 
 ### How to enable BuildKit?
 
