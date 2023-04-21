@@ -1,16 +1,19 @@
 """Settings for the Levenshtein distance service."""
 import logging.config
+from typing import Dict
+
 from environs import Env
 
 logger = logging.getLogger(__name__)
 
 env = Env()
 
+
 def get_logging_config(env, loggers_to_silent=None):
     """Return the python logging configuration based on environment variables.
     The log level for the given loggers_to_silent will be set to INFO.
     Use this for loggers that at DEBUG level put too much entries that we never take care.
-    
+
     The log level for specific loggers can be more customized with the CUSTOM_LOGGING environment
     variable, providing a list of logger and level in the form: CUSTOM_LOGGING=<logger>=<LEVEL>
     This will overwrite the configuration set because of loggers_to_silent (so can be used to put
@@ -85,3 +88,5 @@ LOGGING = get_logging_config(
     ],
 )
 logging.config.dictConfig(LOGGING)
+
+UNIPROT_RESTAPI_ENDPOINT = env.str("UNIPROT_RESTAPI_ENDPOINT", default="https://rest.uniprot.org")
