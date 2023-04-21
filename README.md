@@ -2,7 +2,10 @@
 
 ## Table of content
 1. [Introduction](#introduction)
-2. [Development](#development)
+2. [Architectural design](#architectural-design)
+    1. [Graphical overview](#graphical-overview)
+    2. [Frameworks and tools used](#frameworks-and-tools-used)      
+3. [Development](#development)
     1. [Getting started](#getting-started)
     2. [How to enable BuildKit?](#how-to-enable-buildkit)   
        1. [Enable the BuildKit in Docker Desktop](#enable-the-buildkit-in-docker-desktop)
@@ -11,10 +14,10 @@
     3. [Building your Docker images](#building-your-docker-images)
     4. [How to update project dependencies?](#how-to-update-project-dependencies)
     5. [How to run services locally?](#how-to-run-services-locally)
-3. [Testing and code formatting](#testing-and-code-formatting)
+4. [Testing and code formatting](#testing-and-code-formatting)
     1. [How to run tests locally?](#how-to-run-tests-locally)
     2. [How to format the code before pushing new changes to remote?](#how-to-format-the-code-before-pushing-new-changes-to-remote)
-4. [Continuous integration/CI](#continuous-integration)
+5. [Continuous integration/CI](#continuous-integration)
     1. [Code coverage](#code-coverage)
 
 
@@ -28,6 +31,30 @@ two string-like sequences. It is used as a simple measure of similarity between 
 
 The aim of this project is to develop a web application where a user can compute the Levenshtein distance between
 two proteins.
+
+## Architectural design
+
+### Graphical overview
+
+Here is a graphical overview about the signup, login, job submission, job status check and job result retrieval flow:
+
+![image info](docs/screenshot_overall_flow_1.jpg)
+
+![image info](docs/screenshot_overall_flow_2.jpg)
+
+
+### Frameworks and tools used
+
+| Component      | Framework/Tool |
+| ----------- | ----------- |
+| Calculate Levenshtein distance      | [Levenshtein module](https://pypi.org/project/Levenshtein/)       |
+| Protein sequence retrieval   | [UniProt REST API](https://www.uniprot.org/help/api)        |
+| Web framework   | [Django](https://docs.djangoproject.com/en/4.2/intro/install/)        |
+| Django backend database   | Any relation database would do the trick, e.g. PostgresSQL or MySQL        |
+| User management system   | [Django auth app](https://docs.djangoproject.com/en/4.0/topics/auth/)        |
+| Task Queue   | [Celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html)        |
+| Task Queue Broker   | [Redis](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html#broker-redis)        |
+| Task Queue Result Store   | Re-use Django backend database - Django ORM       |
 
 ## Development
 
