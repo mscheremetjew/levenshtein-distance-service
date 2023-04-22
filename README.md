@@ -12,9 +12,10 @@
        2. [Enable the BuildKit in a fresh terminal](#enable-the-buildkit-in-a-fresh-terminal)
        3. [On Linux machines, you may also need](#on-linux-machines-you-may-also-need)
     3. [Building your Docker images](#building-your-docker-images)
-    4. [How to update project dependencies?](#how-to-update-project-dependencies)
-    5. [How to run services locally?](#how-to-run-services-locally)
-    6. [How to access your local Postgres Docker service?](#how-to-access-your-local-postgres-docker-service)
+    4. [How to access the web application?](#how-to-access-the-web-application)
+    5. [How to update project dependencies?](#how-to-update-project-dependencies)
+    6. [How to run services locally?](#how-to-run-services-locally)
+    7. [How to access your local Postgres Docker service?](#how-to-access-your-local-postgres-docker-service)
 4. [Testing and code formatting](#testing-and-code-formatting)
     1. [How to run tests locally?](#how-to-run-tests-locally)
     2. [How to format the code before pushing new changes to remote?](#how-to-format-the-code-before-pushing-new-changes-to-remote)
@@ -95,16 +96,28 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 ### Building your Docker images
 
 ```shell
-docker build --ssh default . -f Dockerfile -t mscheremetjew/levenshtein-distance-service
+make build-service
 
 docker-compose build
+
+make migrate
+
+make createsuperuser
 ```
 
 And then the service can be started as following:
 
 ```shell
-docker-compose up
+docker-compose up web
 ```
+
+### How to access the web application?
+
+Now that the web server is running, visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/) with your web browser.
+
+The login page can be accessed [here](http://127.0.0.1:8080/user-accounts/login/)
+
+The registration page can be accessed [here](http://127.0.0.1:8080/user-accounts/register/)
 
 ### How to update project dependencies?
 
@@ -133,8 +146,6 @@ OR use the following Makefile command:
 ```shell
 make up
 ```
-
-Now that the web server is running, visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/) with your web browser.
 
 #### How to start services marked with specific profiles - for development only?
 
