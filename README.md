@@ -14,6 +14,7 @@
     3. [Building your Docker images](#building-your-docker-images)
     4. [How to update project dependencies?](#how-to-update-project-dependencies)
     5. [How to run services locally?](#how-to-run-services-locally)
+    6. [How to access your local Postgres Docker service?](#how-to-access-your-local-postgres-docker-service)
 4. [Testing and code formatting](#testing-and-code-formatting)
     1. [How to run tests locally?](#how-to-run-tests-locally)
     2. [How to format the code before pushing new changes to remote?](#how-to-format-the-code-before-pushing-new-changes-to-remote)
@@ -140,6 +141,24 @@ you have to use the --profile option in your docker-compose command.
 
 ```shell
 docker-compose [--profile prometheus]  up
+```
+
+### How to access your local Postgres Docker service?
+
+Execute the postgres docker container to enter the terminal. You can do that for instance via Docker Desktop.
+
+```shell
+docker exec -it <container_name> /bin/sh
+```
+
+Connect to the Postgres database terminal:
+```shell
+psql -d <db-name> -U <username> -W
+```
+
+DB and user name as well as the password can be found and changed in the docker-compose file (see env var POSTGRES_DB etc.)
+```shell
+psql -d distance_service -U maxim -W
 ```
 
 ## Testing and code formatting
