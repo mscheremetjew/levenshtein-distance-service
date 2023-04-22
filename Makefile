@@ -29,6 +29,7 @@ SSH_AUTH_SOCK_ED25519_MOUNT_VOLUMES = -v ~/.ssh/id_ed25519:/id_ed25519:ro -v ~/.
 DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_RSA := --entrypoint= --rm --tty --interactive --env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock ${SSH_AUTH_SOCK_RSA_MOUNT_VOLUMES}
 DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_ED25519 := --entrypoint= --rm --tty --interactive --env SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock ${SSH_AUTH_SOCK_ED25519_MOUNT_VOLUMES}
 SERVICE_TAG :=mscheremetjew/levenshtein-distance-service
+WEB_SERVICE_NAME :=web
 
 #------------------------------
 # helpers
@@ -48,6 +49,15 @@ help:
 	$(call print_options,"lint","Run code lint checks.")
 	$(call print_options,"format","Automatically format code where possible.")
 	$(call print_space)
+	$(call print_h2,"docker")
+	$(call print_options,"build-service","Build the docker image")
+	$(call print_options,"up","Launch all containers including web server in http://localhost:8080".)
+	$(call print_options,"buildup","Rebuild and launch all containers including web server in http://localhost:8080".)
+	$(call print_space)
+	$(call print_h2,"data")
+	$(call print_options,"makemigrations","Generate new database migration if exists$(COMMA) after you will need to do 'sudo chown -R myusername .'.")
+	$(call print_options,"migrate","Executes missing migrations.")
+	$(call print_space)
 	$(call print_h2,"dependency")
 	$(call print_options,"pip-compile-rsa","Compile requirements.txt from requirements.in without upgrading the packages and build the images using RSA SSH key.")
 	$(call print_options,"pip-compile-ed-25519","Compile requirements.txt from requirements.in without upgrading the packages and build the images with ed-25519 SSH key.")
@@ -64,18 +74,18 @@ help:
 #------------------------------
 
 .PHONY: lint
-lint: build-services
+lint: build-service
 	$(call print_h1,"LINTING","CODE")
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "flake8"
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "isort --recursive --check-only"
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "black --check ./"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "flake8"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "isort --recursive --check-only"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "black --check ./"
 	$(call print_h1,"LINTING","COMPLETE")
 
 .PHONY: format
-format: build-services
+format: build-service
 	$(call print_h1,"FORMATTING","CODE")
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "isort --recursive --apply"
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "black ./"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "isort --recursive --apply"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "black ./"
 	$(call print_h1,"FORMATTING","COMPLETE")
 
 #------------------------------
@@ -100,7 +110,7 @@ define dockercomposelocal
 	$(call dockercompose,"$(DOCKER_COMPOSE_FILE_ARG)$(1)")
 endef
 
-define build-services
+define build-service
 	$(call print_h1,"BUILDING","IMAGES","FROM","SCRATCH")
 	@docker build --ssh default -t $(SERVICE_TAG) -f Dockerfile .
 	$(call print_h1,"IMAGES","BUILT","FROM","SCRATCH")
@@ -110,28 +120,19 @@ endef
 # docker
 #------------------------------
 
-.PHONY: build-services
-build-services:
-	$(call build-services)
+.PHONY: build-service
+build-service:
+	$(call build-service)
 
 .PHONY: up
-up: build-services
+up: build-service
 	$(call print_h1,"LAUNCHING","ALL","DOCKER","CONTAINERS")
 	$(call dockercomposelocal,"up -d")
 
 .PHONY: buildup
-buildup: build-services
+buildup: build-service
 	$(call print_h1,"REBUILDING","AND","LAUNCHING","ALL DOCKER CONTAINERS")
 	$(call dockercomposelocal,"up --build")
-
-#------------------------------
-# utility
-#------------------------------
-
-.PHONY: shell-distance_calculator
-shell-distance_calculator:
-	$(call print_h1,"ENTERING","SHELL")
-	@docker-compose exec distance_calculator /bin/bash
 
 #------------------------------
 # dependency
@@ -139,17 +140,42 @@ shell-distance_calculator:
 
 .PHONY: pip-compile-rsa pip-compile-ed-25519
 
-pip-compile-rsa: build-services
+pip-compile-rsa: build-service
 	$(call print_h1,"COMPILING","REQUIREMENTS")
 	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_RSA) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_rsa && pip-compile --no-header --output-file=app/requirements.txt"
-	$(call build-services)
+	$(call build-service)
 	$(call print_h1,"REQUIREMENTS","COMPILED")
 
-pip-compile-ed-25519: build-services
+pip-compile-ed-25519: build-service
 	$(call print_h1,"COMPILING","REQUIREMENTS")
 	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_ED25519) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_ed25519 && pip-compile --no-header --output-file=app/requirements.txt"
-	$(call build-services)
+	$(call build-service)
 	$(call print_h1,"REQUIREMENTS","COMPILED")
+
+#------------------------------
+# data
+#------------------------------
+
+.PHONY: makemigrations
+makemigrations:
+	$(call print_h1,"MAKING","MIGRATIONS")
+	@docker-compose run --rm web python manage.py makemigrations
+	$(call print_h1,"MIGRATIONS","MADE")
+
+.PHONY: migrate
+migrate: up
+	$(call print_h1,"RUNNING","MIGRATIONS")
+	@docker-compose exec web python manage.py migrate
+	$(call print_h1,"MIGRATIONS","COMPLETE")
+
+#------------------------------
+# utility
+#------------------------------
+
+.PHONY: shell-web
+shell-web:
+	$(call print_h1,"ENTERING","SHELL")
+	@docker-compose exec web /bin/bash
 
 #------------------------------
 # Q&A
@@ -158,13 +184,13 @@ pip-compile-ed-25519: build-services
 .PHONY: pytest
 pytest:
 	$(call print_h1,"RUNNING","PYTEST","TESTS")
-	@$(eval CMD := "docker-compose run --rm --entrypoint=sh distance_calculator -c 'pytest -vv'")
+	@$(eval CMD := "docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c 'pytest -vv'")
 	$(call run_if_last,${CMD} ${POS_ARGS} ${ARGS})
 
 .PHONY: pytest-h
 pytest-h:
 	$(call print_h1,"SHOWING","PYTEST","HELP")
-	@docker-compose run --rm --entrypoint=sh distance_calculator -c "pytest --help"
+	@docker-compose run --rm --entrypoint=sh $(WEB_SERVICE_NAME) -c "pytest --help"
 
 #------------------------------
 # dynamic functionality

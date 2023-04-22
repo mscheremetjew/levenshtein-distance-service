@@ -47,13 +47,13 @@ class _UniprotClient:
             },
         )
         if response.status_code in (
-                requests.codes.no_content,
-                requests.codes.not_found,
+            requests.codes.no_content,
+            requests.codes.not_found,
         ):
             logger.warning("Entry not found in REST API")
         elif response.status_code in (
-                requests.codes.unauthorized,
-                requests.codes.forbidden,
+            requests.codes.unauthorized,
+            requests.codes.forbidden,
         ):
             logger.error("Request not authorized.")
         elif response.status_code == requests.codes.internal_server_error:
@@ -64,5 +64,5 @@ class _UniprotClient:
 uniprot_client = _UniprotClient()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logger.info(uniprot_client.fetch_sequence_by_uniprot_id("A0A3G5A511"))
