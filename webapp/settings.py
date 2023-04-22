@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY")
+SECRET_KEY = env.str("SECRET_KEY", default="fake-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "authentication",
+    "user_accounts",
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,7 @@ ROOT_URLCONF = "webapp.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "webapp/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -151,3 +153,12 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
+
+DJANGO_SUPERUSER_PASSWORD = "admin"
+DJANGO_SUPERUSER_USERNAME = "admin"
+DJANGO_SUPERUSER_EMAIL = "admin@group.com"
+
+AUTH_USER_MODEL = "authentication.User"
