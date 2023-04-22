@@ -15,6 +15,8 @@ services:
     networks:
       - microservices
     environment:
+      - DEBUG=true
+      - SECRET_KEY=blahe9w5c92)o5x%!awwfhduln=06xl%u_*(x%)_7s9y3v3f971tek
       # Logging
       - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=DEBUG
       - CUSTOM_LOGGING
