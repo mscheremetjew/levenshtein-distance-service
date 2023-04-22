@@ -134,6 +134,8 @@ OR use the following Makefile command:
 make up
 ```
 
+Now that the web server is running, visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/) with your web browser.
+
 #### How to start services marked with specific profiles - for development only?
 
 Certain services are marked with specific profiles. To start these services
