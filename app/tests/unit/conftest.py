@@ -13,7 +13,7 @@ def mock_protein_sequence():
 @pytest.fixture
 def mock_fasta_formatted_sequence(mock_protein_sequence):
     fasta_header = ">tr|A0A3G5A511|A0A3G5A511_9VIRU DNA-directed RNA polymerase OS=Harvfovirus sp OX=2487768 GN=Harvfovirus44_2 PE=3 SV=1"
-    return fasta_header+f"\n{mock_protein_sequence}"
+    return fasta_header + f"\n{mock_protein_sequence}"
 
 
 @pytest.fixture

@@ -11,16 +11,13 @@ from app.uniprot_api import uniprot_client
     [
         (
             "A0A3G5A511",
-            {'params': {'format': 'fasta'}},
-            "MIDVLRTSLDECKNEKGLKILTQEDALEYLMTKMRVIKKYSETDKNVRQQQKRLHLKTLLETGFIPHVENDM"
+            {"params": {"format": "fasta"}},
+            "MIDVLRTSLDECKNEKGLKILTQEDALEYLMTKMRVIKKYSETDKNVRQQQKRLHLKTLLETGFIPHVENDM",
         ),
     ],
 )
 def test_fetch_sequence_by_uniprot_id_should_succeed(
-    mock_valid_uniprot_client_request,
-    uniprot_id,
-    expected_call_kwargs,
-    expected_result
+    mock_valid_uniprot_client_request, uniprot_id, expected_call_kwargs, expected_result
 ):
     """Test 'fetch_sequence_by_uniprot_id' method should succeed and return expected result."""
     # ... given
@@ -40,7 +37,7 @@ def test_fetch_sequence_by_uniprot_id_should_succeed(
 @pytest.mark.parametrize(
     "uniprot_id",
     [
-            "A0A3G5A511",
+        "A0A3G5A511",
     ],
 )
 def test_fetch_sequence_by_uniprot_id_should_fail(
