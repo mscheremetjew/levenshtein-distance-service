@@ -168,6 +168,12 @@ migrate: up
 	@docker-compose exec web python manage.py migrate
 	$(call print_h1,"MIGRATIONS","COMPLETE")
 
+.PHONY: createsuperuser
+createsuperuser: up
+	$(call print_h1,"RUNNING","CREATESUPERUSER")
+	@docker-compose exec web python manage.py createsuperuser
+	$(call print_h1,"CREATESUPERUSER","COMPLETE")
+
 #------------------------------
 # utility
 #------------------------------

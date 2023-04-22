@@ -32,12 +32,8 @@ RUN --mount=type=ssh \
     apt-get -qy autoremove && \
     apt-get clean
 
-COPY requirements.in setup.cfg pyproject.toml .coveragerc .
-
-# Copy the application code
-COPY app/ $DIRPATH/app/
-COPY webapp/ $DIRPATH/webapp/
-COPY manage.py .
+# Copy the entire application code
+COPY . $WORKDIR
 
 # Now, be a web server.
 EXPOSE 8080
