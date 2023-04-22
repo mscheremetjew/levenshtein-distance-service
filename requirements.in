@@ -7,6 +7,7 @@ biopython~=1.81
 celery[redis]~=5.2.7
 flower~=1.2.0
 django>=3.2,<4.0
+django-environ~=0.4.5
 
 # Databases
 psycopg2==2.8.5
