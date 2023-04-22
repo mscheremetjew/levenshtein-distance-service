@@ -1,21 +1,26 @@
 version: "3.1"
 services:
-  distance_calculator:
+  web:
     stdin_open: true
     build:
       context: .
       dockerfile: Dockerfile
-    command: adev runserver -p 8002
+    command: python manage.py runserver 0.0.0.0:8080
     ports:
-      - "8001:8001"
+      - "8080:8080"
+    volumes:
+      - .:/var/levenshtein-distance-service
+    depends_on:
+      - postgres
     networks:
       - microservices
     environment:
       # Logging
-      - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=INFO
+      - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=DEBUG
       - CUSTOM_LOGGING
   postgres:
     image: postgres:13.4
+    restart: always
     ports:
       - "15432:5432"
     networks:
