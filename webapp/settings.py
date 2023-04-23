@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import logging.config
+from multiprocessing import cpu_count
 from pathlib import Path
 
 from environs import Env
@@ -30,6 +31,7 @@ SECRET_KEY = env.str("SECRET_KEY", default="fake-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+TESTING = env.bool("TESTING", default=False)
 
 # The logging must to be the first thing to configure to get the logs raised here
 LOGGING = get_logging_config(
@@ -57,6 +59,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "authentication",
     "registration",
+    "distance_app",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -162,3 +166,34 @@ DJANGO_SUPERUSER_USERNAME = "admin"
 DJANGO_SUPERUSER_EMAIL = "admin@group.com"
 
 AUTH_USER_MODEL = "authentication.User"
+
+# Celery settings
+# Note revised lower case settings, changed at 4.0
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#new-lowercase-settings
+
+BROKER_URL = env.str("CELERY_BROKER_URL", default="amqp://")
+# If testing, send Celery tasks to an in-memory queue (which should not be read by any workers).
+if TESTING:
+    BROKER_URL = "memory://localhost/"
+
+
+CELERY_CONF = {
+    "broker_url": BROKER_URL,
+    "result_backend": "django-db",
+    "accept_content": ["json"],
+    "task_serializer": "json",
+    "worker_concurrency": cpu_count() * env.int("CELERY_WORKER_CONCURRENCY_PER_CPU", 4),
+    "worker_hijack_root_logger": False,
+}
+
+UNIPROT_RESTAPI_ENDPOINT = env.str("UNIPROT_RESTAPI_ENDPOINT", default="https://rest.uniprot.org")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis_cache:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}

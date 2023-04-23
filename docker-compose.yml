@@ -12,14 +12,18 @@ services:
       - .:/var/levenshtein-distance-service
     depends_on:
       - postgres
+      - celery_worker
+      - redis_cache
     networks:
       - microservices
     environment:
-      - DEBUG=true
+      - DEBUG=True
       - SECRET_KEY=blahe9w5c92)o5x%!awwfhduln=06xl%u_*(x%)_7s9y3v3f971tek
       # Logging
       - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=DEBUG
       - CUSTOM_LOGGING
+      # Celery configuration
+      - CELERY_BROKER_URL=amqp://admin:mypass@rabbitmq
   postgres:
     image: postgres:13.4
     restart: always
@@ -31,16 +35,50 @@ services:
       - POSTGRES_DB=distance_service
       - POSTGRES_USER=maxim
       - POSTGRES_PASSWORD=maxim
-  redis:
-    # For dev purposes only
+  rabbitmq:
+    image: rabbitmq:3.6-management
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - microservices
+  celery_worker:
+    image: mscheremetjew/levenshtein-distance-service
+    command: celery -A webapp worker --loglevel DEBUG --concurrency 4 -E
+    healthcheck:
+      test: [ "CMD", "celery", "status" ]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    volumes:
+      - .:/var/levenshtein-distance-service
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - microservices
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=blahe9w5c92)o5x%!awwfhduln=06xl%u_*(x%)_7s9y3v3f971tek
+      # Logging
+      - CONSOLE_LOGGING_HANDLER_MIN_LEVEL=DEBUG
+      - CUSTOM_LOGGING
+      # Celery configuration
+      - CELERY_BROKER_URL=amqp://admin:mypass@rabbitmq
+  redis_cache:
     image: "redis:6.2.12-alpine"
+    networks:
+      - microservices
     ports:
       - "6379:6379"
     volumes:
       - ./config/redis/redis.conf:/redis.conf
     command: [ "redis-server", "/redis.conf" ]
-    networks:
-      - microservices
+
 
 networks:
     microservices:

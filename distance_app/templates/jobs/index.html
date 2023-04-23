@@ -1,0 +1,31 @@
+{% block content %}
+{% if user.is_authenticated %}
+<form action="/jobs/" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>Submit a new Levenshtein Distance calculation job</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <label for="uniprot_id_1">UniProt ID 1: </label>
+    <input id="uniprot_id_1" type="text" name="uniprot_id_1" value="A0A3G5A511"><br>
+    <label for="uniprot_id_2">UniProt ID 2: </label>
+    <input id="uniprot_id_2" type="text" name="uniprot_id_2" value="P05067"><br><br>
+    <input type="submit" value="Submit job">
+</fieldset>
+</form>
+<p>Job results:</p>
+{% if latest_job_list %}
+    <ul>
+    {% for task in latest_job_list %}
+        <li><a href="/jobs/{{ task.task_id }}/">{{ task.task_id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No jobs available.</p>
+{% endif %}
+{% else %}
+  <p>You are not logged in! You need to
+  <a href="{% url 'login' %}">Log In</a> to submit jobs!
+    </p>
+{% endif %}
+{% endblock %}
+<br><a href="{% url 'home' %}">Home</a>

@@ -28,7 +28,9 @@ def mock_valid_uniprot_client_request(mocker, mock_fasta_formatted_sequence):
         def text(self):
             return self.text()
 
-    return mocker.patch("app.uniprot_api.requests.get", return_value=MockResponse(mock_fasta_formatted_sequence, 200))
+    return mocker.patch(
+        "distance_app.uniprot_api.requests.get", return_value=MockResponse(mock_fasta_formatted_sequence, 200)
+    )
 
 
 @pytest.fixture
@@ -43,9 +45,9 @@ def mock_invalid_uniprot_client_request(mocker):
         def text(self):
             return self.text()
 
-    return mocker.patch("app.uniprot_api.requests.get", return_value=MockResponse("", 500))
+    return mocker.patch("distance_app.uniprot_api.requests.get", return_value=MockResponse("", 500))
 
 
 @pytest.fixture
 def mock_logger_uniprot_api(mocker):  # noqa: D103
-    return mocker.patch("app.uniprot_api.logger")
+    return mocker.patch("distance_app.uniprot_api.logger")

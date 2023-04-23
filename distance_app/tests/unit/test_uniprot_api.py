@@ -3,7 +3,7 @@ from unittest.mock import call
 
 import pytest
 
-from app.uniprot_api import uniprot_client
+from distance_app.uniprot_api import uniprot_client
 
 
 @pytest.mark.parametrize(

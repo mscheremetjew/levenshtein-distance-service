@@ -4,7 +4,9 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.email }}, your login was successful!
+  <p>Hi {{ user.email }}, your login was successful!<br>
+    You can now submit analysis jobs <a href="/jobs/">here</a>
+  </p>
   <p><a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
   <p>You are not logged in</p>

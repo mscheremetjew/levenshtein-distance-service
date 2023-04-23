@@ -6,8 +6,12 @@ requests~=2.28.0
 biopython~=1.81
 celery[redis]~=5.2.7
 flower~=1.2.0
+
+# Django
 django>=3.2,<4.0
 django-environ~=0.4.5
+django-celery-results~=2.5.0
+django-redis~=5.2.0
 
 # Databases
 psycopg2==2.8.5
