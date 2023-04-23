@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.db import IntegrityError, models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_celery_results.models import TaskResult
 
 
 class UserManager(BaseUserManager):
@@ -92,3 +93,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+TaskResult.add_to_class("task_creator", models.ForeignKey(User, on_delete=models.CASCADE))
