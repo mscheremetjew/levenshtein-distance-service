@@ -7,7 +7,6 @@ from django.conf import settings
 from requests import RequestException
 from retry_decorator import retry
 
-
 logger = logging.getLogger(__name__)
 
 
