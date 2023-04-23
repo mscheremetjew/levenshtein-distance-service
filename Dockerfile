@@ -21,7 +21,7 @@ RUN apt-get update && \
         libpq-dev \
         python-dev
 
-COPY app/requirements.txt $DIRPATH/
+COPY requirements.txt $DIRPATH/
 RUN mkdir -pm 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN --mount=type=ssh \
     pip install --no-cache-dir --upgrade pip && \
