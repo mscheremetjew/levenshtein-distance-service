@@ -22,4 +22,5 @@ urlpatterns = [
     path("user-accounts/", include("registration.urls")),
     path("user-accounts/", include("django.contrib.auth.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", include("distance_app.urls")),
 ]

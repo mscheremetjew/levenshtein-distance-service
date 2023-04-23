@@ -55,7 +55,7 @@ Here is a graphical overview about the signup, login, job submission, job status
 | Django backend database   | Any relation database would do the trick, e.g. PostgresSQL or MySQL        |
 | User management system   | [Django auth app](https://docs.djangoproject.com/en/4.0/topics/auth/)        |
 | Task Queue   | [Celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html)        |
-| Task Queue Broker   | [Redis](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html#broker-redis)        |
+| Task Queue Broker   | [RabbitMQ](https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/rabbitmq.html)        |
 | Task Queue Result Store   | Re-use Django backend database - Django ORM       |
 
 ## Development
@@ -118,6 +118,8 @@ Now that the web server is running, visit [http://127.0.0.1:8080/](http://127.0.
 The login page can be accessed [here](http://127.0.0.1:8080/user-accounts/login/)
 
 The registration page can be accessed [here](http://127.0.0.1:8080/user-accounts/register/)
+
+and the job submission page [here](http://localhost:8080/jobs/)
 
 ### How to update project dependencies?
 

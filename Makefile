@@ -142,13 +142,13 @@ buildup: build-service
 
 pip-compile-rsa: build-service
 	$(call print_h1,"COMPILING","REQUIREMENTS")
-	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_RSA) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_rsa && pip-compile --no-header --output-file=app/requirements.txt"
+	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_RSA) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_rsa && pip-compile --no-header --output-file=requirements.txt"
 	$(call build-service)
 	$(call print_h1,"REQUIREMENTS","COMPILED")
 
 pip-compile-ed-25519: build-service
 	$(call print_h1,"COMPILING","REQUIREMENTS")
-	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_ED25519) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_ed25519 && pip-compile --no-header --output-file=app/requirements.txt"
+	@-docker run $(DOCKER_RUN_ARGS_FOR_SSH_AUTH_SOCK_ED25519) -v ${PWD}:/var/levenshtein-distance-service/ $(SERVICE_TAG) sh -c "ssh-add /id_ed25519 && pip-compile --no-header --output-file=requirements.txt"
 	$(call build-service)
 	$(call print_h1,"REQUIREMENTS","COMPILED")
 
@@ -166,6 +166,7 @@ makemigrations:
 migrate: up
 	$(call print_h1,"RUNNING","MIGRATIONS")
 	@docker-compose exec web python manage.py migrate
+	@docker-compose exec web python manage.py migrate django_celery_results
 	$(call print_h1,"MIGRATIONS","COMPLETE")
 
 .PHONY: createsuperuser

@@ -1,0 +1,21 @@
+{% block content %}
+{% if user.is_authenticated %}
+<p>Job results:</p>
+{% if job_detail %}
+    <ul>
+        <li>{{ job_detail.task_id }}</li>
+        <li>{{ job_detail.task_name }}</li>
+        <li>{{ job_detail.status }}</li>
+        <li>Levenshtein distance: {{ job_detail.result }}</li>
+    </ul>
+{% else %}
+    <p>No job details available.</p>
+{% endif %}
+{% else %}
+  <p>You are not logged in! You need to
+  <a href="{% url 'login' %}">Log In</a> to submit jobs!
+    </p>
+{% endif %}
+{% endblock %}
+<br>Back to <a href="{% url 'home' %}">Home</a>
+<br>Back to the <a href="/jobs/">job submission page</a>

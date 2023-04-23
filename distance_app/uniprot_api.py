@@ -3,10 +3,10 @@ from io import StringIO
 
 import requests
 from Bio import SeqIO
+from django.conf import settings
 from requests import RequestException
 from retry_decorator import retry
 
-from app import settings
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,7 @@ class _UniprotClient:
         :param uniprot_id: UniProt accession, e.g. A0A3G5A511
         :return: protein sequence
         """
+        logger.info(f"Fetching protein sequence by uniprot id: {uniprot_id}")
         request_url = self.base_url + f"/uniprotkb/{uniprot_id}"
         response = self._send_request(request_url, result_format="fasta")
         if response.status_code == requests.codes.ok:
@@ -31,7 +32,10 @@ class _UniprotClient:
                 with StringIO(response.text) as handler:
                     records = list(SeqIO.parse(handler, "fasta"))
                 if len(records) == 1:
-                    return str(records[0].seq)
+                    logger.info("Protein sequence successfully fetched.")
+                    result = str(records[0].seq)
+                    logger.debug(f"Protein sequence: {result}")
+                    return result
             except BaseException as err:
                 logger.exception(f"Unexpected {err=}, {type(err)=}")
                 raise

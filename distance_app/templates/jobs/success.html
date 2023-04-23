@@ -1,0 +1,12 @@
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% if user.is_authenticated %}
+<p>Job with the following task id successfully submitted: {{task_id}}</p>
+{% else %}
+  <p>You are not logged in! You need to
+  <a href="{% url 'login' %}">Log In</a> to submit jobs!
+    </p>
+{% endif %}
+{% endblock %}
+<br>Back to <a href="{% url 'home' %}">Home</a>
+<br>Back to the <a href="/jobs/">job submission page</a>
